@@ -3,7 +3,7 @@ package rpc
 import (
 	"fmt"
 	"io"
-	msgpack "github.com/msgpack/msgpack-go"
+	msgpack "github.com/halokid/msgpack-go"
 	"net"
 	"reflect"
 	"errors"
