@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	msgpack "github.com/halokid/msgpack-go"
+	"log"
 	"net"
 	"reflect"
 	"errors"
@@ -81,6 +82,14 @@ func (self *Session) SendV(funcName string, arguments []interface{}) (reflect.Va
 		if _result.Kind() == reflect.Array || _result.Kind() == reflect.Slice {
 			elemType := _result.Type().Elem()
 			if elemType.Kind() == reflect.Uint8 {
+				log.Println("[DEBUG]--- _result type: ", _result.Type(), "--", reflect.TypeOf(_result))
+				// fixme: when the _result is too large, _result type is `msgpack.Bytes`, but here use `[]byte` to conversion
+				// fixme: interface{} type , so here need to check
+				//if reflect.TypeOf(_result) != "msgpack.Bytes" {
+				//	result = reflect.ValueOf(string(_result.Interface().([]byte)))
+				//}
+
+
 				result = reflect.ValueOf(string(_result.Interface().([]byte)))
 			}
 		}
