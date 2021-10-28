@@ -89,8 +89,25 @@ func (self *Session) SendV(funcName string, arguments []interface{}) (reflect.Va
 				//	result = reflect.ValueOf(string(_result.Interface().([]byte)))
 				//}
 
-
-				result = reflect.ValueOf(string(_result.Interface().([]byte)))
+				switch _result.Interface().(type) {
+				case msgpack.Bytes:
+					log.Println("reflect type msgpack bytes")
+					result = reflect.ValueOf(string(_result.Interface().(msgpack.Bytes)))
+				case []uint8:
+					log.Println("reflect type []uint8")
+					result = reflect.ValueOf(string(_result.Interface().([]byte)))
+				}
+				/*
+				switch _result.Kind() {
+				case reflect.Uint8:
+					log.Println("reflect.Uint8")
+				case reflect.Slice:
+					log.Println("reflect.Slice")
+				default:
+					log.Println("reflect default")
+				}
+				*/
+				//result = reflect.ValueOf(string(_result.Interface().([]byte)))
 			}
 		}
 	}
