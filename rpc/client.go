@@ -91,8 +91,11 @@ func (self *Session) SendV(funcName string, arguments []interface{}) (reflect.Va
 
 				switch _result.Interface().(type) {
 				case msgpack.Bytes:
+					// fixme: if the data is too big, msgpack.Bytes will encode error, so this should convert msgpack.Bytes to
+					// fixme: []byte, how convert?
 					log.Println("reflect type msgpack bytes")
 					result = reflect.ValueOf(string(_result.Interface().(msgpack.Bytes)))
+					//result = reflect.ValueOf(string(_result.Interface().([]byte)))
 				case []uint8:
 					log.Println("reflect type []uint8")
 					result = reflect.ValueOf(string(_result.Interface().([]byte)))
@@ -197,10 +200,13 @@ func HandleRPCResponse(req reflect.Value) (int, reflect.Value, error) {
                                 break;
                         }
                         if errorMsg != nil {
+        log.Println("---匹配到_req[2].IsValid()的情况---")
 				return int(msgId.Int()), reflect.Value{}, errors.New(string(errorMsg))
 			}
 		}
+		log.Println("---HandleRPCResponse在for中返回---")
 		return int(msgId.Int()), _req[3], nil
 	}
+	log.Println("---HandleRPCResponse跳出for中返回---")
 	return 0, reflect.Value{}, errors.New("Invalid message format")
 }
